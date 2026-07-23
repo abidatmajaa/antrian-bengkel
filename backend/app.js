@@ -30,15 +30,7 @@ app.use(settingRoutes);
 app.use(dateQuotaRoutes);
 app.use(reviewRoutes);
 
-app.use(express.static(path.join(__dirname, '../dist')));
 
-app.use((req, res, next) => {
-    if (req.method === 'GET' && req.accepts('html')) {
-        res.sendFile(path.join(__dirname, '../dist/index.html'));
-    } else {
-        next();
-    }
-});
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
