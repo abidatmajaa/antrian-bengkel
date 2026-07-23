@@ -42,16 +42,13 @@ const Testimonials = () => {
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile(); // Check on mount
     window.addEventListener('resize', checkMobile);
-    
-    // Fetch featured reviews
+
     const fetchReviews = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/reviews/featured`);
         const data = await res.json();
         if (res.ok && data.data && data.data.length > 0) {
-          // Format the data to match expected shape
           const formatted = data.data.map(r => ({
             id: r.id,
             name: r.User?.name || 'Pelanggan',
@@ -60,15 +57,15 @@ const Testimonials = () => {
           }));
           setReviews(formatted);
         } else {
-          setReviews(TESTIMONIALS_DATA); // Fallback to dummy data
+          setReviews(TESTIMONIALS_DATA);
         }
       } catch (err) {
-        setReviews(TESTIMONIALS_DATA); // Fallback to dummy data on error
+        setReviews(TESTIMONIALS_DATA);
       }
     };
-    
+
     fetchReviews();
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -76,7 +73,6 @@ const Testimonials = () => {
   const visibleCount = isMobile ? 1 : 3;
   const maxIndex = Math.max(0, displayData.length - visibleCount);
 
-  // Ensure index is within bounds if screen size changes
   useEffect(() => {
     if (currentIndex > maxIndex) setCurrentIndex(maxIndex);
   }, [maxIndex, currentIndex]);
@@ -86,7 +82,7 @@ const Testimonials = () => {
 
   return (
     <section id="ulasan" aria-label="Ulasan pelanggan" className="py-20 px-4 bg-gradient-to-b from-[#050914] to-[#02040a] relative overflow-hidden">
-      
+
       {/* Header Section */}
       <div className="text-center mb-16 relative z-10">
         <p className="text-amber-400 text-[12px] font-bold uppercase tracking-[0.2em] mb-3 flex justify-center items-center gap-2">
@@ -99,11 +95,11 @@ const Testimonials = () => {
         </h2>
         <div className="w-12 h-1 bg-amber-400 mx-auto rounded-full"></div>
       </div>
-      
+
       <div className="max-w-[1100px] mx-auto">
         {/* Slider Track Wrapper */}
         <div className="overflow-hidden w-full -mx-3 px-3">
-          <div 
+          <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentIndex * (isMobile ? 100 : 33.333)}%)` }}
           >
@@ -115,13 +111,13 @@ const Testimonials = () => {
                     <svg className="w-10 h-10 text-amber-400 mb-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V12C14.017 12.5523 13.5693 13 13.017 13H11.017C10.4647 13 10.017 12.5523 10.017 12V9C10.017 6.79086 11.8079 5 14.017 5H19.017C21.2261 5 23.017 6.79086 23.017 9V15C23.017 18.3137 20.3307 21 17.017 21H14.017ZM1.017 21L1.017 18C1.017 16.8954 1.91243 16 3.017 16H6.017C6.56929 16 7.017 15.5523 7.017 15V9C7.017 8.44772 6.56929 8 6.017 8H2.017C1.46472 8 1.017 8.44772 1.017 9V12C1.017 12.5523 0.569287 13 0.017 13H-1.983C-2.53528 13 -2.983 12.5523 -2.983 12V9C-2.983 6.79086 -1.19214 5 1.017 5H6.017C8.22614 5 10.017 6.79086 10.017 9V15C10.017 18.3137 7.33071 21 4.017 21H1.017Z" />
                     </svg>
-                    
+
                     {/* Italic Text */}
                     <p className="text-white/90 text-[16px] leading-relaxed italic font-light">
                       {t.text}
                     </p>
                   </div>
-                  
+
                   {/* Footer Card: Name & Stars */}
                   <div>
                     <p className="text-white font-bold text-[16px] mb-2">{t.name}</p>
@@ -139,9 +135,9 @@ const Testimonials = () => {
 
         {/* Carousel Navigation (Tombol & Dots di bawah) */}
         <div className="flex justify-center items-center gap-8 mt-12">
-          
+
           {/* Prev Button (Hitam Border Kuning) */}
-          <button 
+          <button
             onClick={prevSlide}
             disabled={currentIndex === 0}
             className="w-12 h-12 rounded-full border border-amber-400 flex items-center justify-center text-amber-400 bg-transparent disabled:opacity-30 hover:bg-amber-400/10 transition-all cursor-pointer disabled:cursor-not-allowed"
@@ -155,19 +151,18 @@ const Testimonials = () => {
           {/* Dots Indicator */}
           <div className="flex gap-2.5">
             {[...Array(maxIndex + 1)].map((_, i) => (
-              <button 
+              <button
                 key={i}
                 onClick={() => setCurrentIndex(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  currentIndex === i ? 'w-6 bg-amber-400' : 'w-2 bg-white/20 hover:bg-white/40'
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 ${currentIndex === i ? 'w-6 bg-amber-400' : 'w-2 bg-white/20 hover:bg-white/40'
+                  }`}
                 aria-label={`Pergi ke halaman ${i + 1}`}
               />
             ))}
           </div>
 
           {/* Next Button (Kuning Solid) */}
-          <button 
+          <button
             onClick={nextSlide}
             disabled={currentIndex === maxIndex}
             className="w-12 h-12 rounded-full bg-amber-400 flex items-center justify-center text-black disabled:opacity-30 hover:bg-amber-300 transition-all cursor-pointer disabled:cursor-not-allowed shadow-[0_0_15px_rgba(251,191,36,0.2)]"
@@ -177,7 +172,7 @@ const Testimonials = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
             </svg>
           </button>
-          
+
         </div>
       </div>
     </section>
